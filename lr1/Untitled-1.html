@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+    <body>
+<div>
+    <h1 style="text-align: center;">Summary</h1>
+        
+</div>
+<div>
+    <p style="text-align: left;">Name: Mary<br>
+        Surname: Khatetovskaya
+    </p>
+</div>
+<hr>
+
+<div>
+    <p Style="text-align: left;">
+        I want to do the things i want. Programming is a way i like<br>
+        express myself approximately. It's my hobby and a one way to live.<br>
+<blockquote>Если бы вы поняли, как сильны ваши мысли, вы бы никогда не думали негативно.</blockquote>
+    </p>
+</div>
+<hr>
+<div>
+<p style="text-align: left;"><b>Languages</b></p>
+<p style="text-align: left;">
+    <mark>English: C1;</mark><br>
+    <mark>Chineese: HSK2;</mark><br>
+    Russian: native;<br>
+    Belarussian: native;<br>        
+</p>
+</div>
+<hr>
+<div>
+<p>
+<span>Skills:</span>
+</p>
+<p style="text-align: left; border: 2cm;"> 
+    <b>Lang:</b> C#, C++, C, Assembler, VHDL, SQL.<br>
+    <b>Addons:</b> Visual studio 2022, Visual Studio Code,<br>
+     Linux, Windows. 
+     <pre><code>using System;
+
+namespace ArrayTask
+{
+    // Класс, работающий с одномерным массивом
+    public class CustomArray
+    {
+        private double[] array;
+
+        // Конструктор с параметрами: количество элементов массива, диапазон значений элементов массива
+        public CustomArray(int count, double minValue, double maxValue)
+        {
+            if (count <= 0)
+                throw new ArgumentException("Количество элементов должно быть положительным числом", nameof(count));
+
+            if (minValue >= maxValue)
+                throw new ArgumentException("Минимальное значение должно быть меньше максимального", nameof(minValue));
+
+            array = new double[count];
+            InitializeArray(minValue, maxValue);
+        }
+
+        // Конструктор с параметрами: количество элементов массива (диапазон по умолчанию: 3.3 до 10)
+        public CustomArray(int count) : this(count, 3.3, 10.0)
+        {
+        }
+
+        // Инициализация массива случайными значениями в заданном диапазоне
+        private void InitializeArray(double minValue, double maxValue)
+        {
+            Random random = new Random();
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                // Генерация случайного числа в заданном диапазоне
+                array[i] = minValue + random.NextDouble() * (maxValue - minValue);
+            }
+        }
+
+        // Метод 1: Вычисление суммы элементов массива с четными индексами
+        public double CalculateSumEvenIndices()
+        {
+            double sum = 0;
+
+            for (int i = 0; i < array.Length; i += 2)
+            {
+                sum += array[i];
+            }
+
+            return sum;
+        }
+
+        // Метод 2: Вычисление произведения элементов массива, 
+        // расположенных между максимальным и минимальным элементами
+        public double CalculateProductBetweenMinMax()
+        {
+            if (array.Length < 3) // Нужно хотя бы 3 элемента, чтобы были элементы между
+                return 0;
+
+            // Находим индексы минимального и максимального элементов
+            int minIndex = 0;
+            int maxIndex = 0;
+
+            for (int i = 1; i < array.Length; i++)
+            {
+                if (array[i] < array[minIndex])
+                    minIndex = i;
+                if (array[i] > array[maxIndex])
+                    maxIndex = i;
+            }
+
+            // Определяем границы для вычисления произведения
+            int startIndex = Math.Min(minIndex, maxIndex) + 1;
+            int endIndex = Math.Max(minIndex, maxIndex) - 1;
+
+            // Если между элементами нет других элементов
+            if (startIndex > endIndex)
+                return 0;
+
+            // Вычисляем произведение
+            double product = 1;
+            for (int i = startIndex; i <= endIndex; i++)
+            {
+                product *= array[i];
+            }
+
+            return product;
+        }
+
+        // Свойство, доступное только для чтения: среднее арифметическое элементов массива
+        public double Average
+        {
+            get
+            {
+                if (array.Length == 0)
+                    return 0;
+
+                double sum = 0;
+                foreach (double element in array)
+                {
+                    sum += element;
+                }
+
+                return sum / array.Length;
+            }
+        }
+
+        // Метод для вывода массива в строку (для демонстрации)
+        public void PrintArray(string arrayName)
+        {
+            Console.Write($"{arrayName}: [");
+            for (int i = 0; i < array.Length; i++)
+            {
+                Console.Write($"{array[i]:F2}");
+                if (i < array.Length - 1)
+                    Console.Write(", ");
+            }
+            Console.WriteLine("]");
+        }
+
+        // Свойство для получения длины массива
+        public int Length
+        {
+            get { return array.Length; }
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("=== Демонстрация работы класса CustomArray ===\n");
+
+            try
+            {
+                // Создание объектов класса различными способами
+
+                // Способ 1: Конструктор с параметрами (количество элементов, диапазон значений)
+                Console.WriteLine("1. Создание массива с явным указанием диапазона:");
+                CustomArray array1 = new CustomArray(8, 3.3, 10.0);
+                array1.PrintArray("Массив 1");
+                DemonstrateMethods(array1);
+
+                Console.WriteLine("\n" + new string('-', 50) + "\n");
+
+                // Способ 2: Конструктор только с количеством элементов (диапазон по умолчанию)
+                Console.WriteLine("2. Создание массива с диапазоном по умолчанию (3.3-10):");
+                CustomArray array2 = new CustomArray(6);
+                array2.PrintArray("Массив 2");
+                DemonstrateMethods(array2);
+
+                Console.WriteLine("\n" + new string('-', 50) + "\n");
+
+                // Способ 3: Массив с другим диапазоном значений
+                Console.WriteLine("3. Создание массива с другим диапазоном (5.0-15.0):");
+                CustomArray array3 = new CustomArray(10, 5.0, 15.0);
+                array3.PrintArray("Массив 3");
+                DemonstrateMethods(array3);
+
+                Console.WriteLine("\n" + new string('-', 50) + "\n");
+
+                // Способ 4: Массив с минимальным количеством элементов
+                Console.WriteLine("4. Создание маленького массива (3 элемента):");
+                CustomArray array4 = new CustomArray(3, 1.0, 5.0);
+                array4.PrintArray("Массив 4");
+                DemonstrateMethods(array4);
+
+                Console.WriteLine("\n" + new string('-', 50) + "\n");
+
+                // Дополнительная демонстрация свойства Average
+                Console.WriteLine("5. Вывод значений свойства Average для всех массивов:");
+                Console.WriteLine($"Среднее массива 1: {array1.Average:F2}");
+                Console.WriteLine($"Среднее массива 2: {array2.Average:F2}");
+                Console.WriteLine($"Среднее массива 3: {array3.Average:F2}");
+                Console.WriteLine($"Среднее массива 4: {array4.Average:F2}");
+
+                // Тестирование граничных случаев
+                Console.WriteLine("\n" + new string('-', 50) + "\n");
+                Console.WriteLine("6. Тестирование граничных случаев:");
+
+                // Попытка создать массив с некорректными параметрами
+                try
+                {
+                    CustomArray invalidArray = new CustomArray(0, 1.0, 5.0);
+                }
+                catch (ArgumentException ex)
+                {
+                    Console.WriteLine($"Ошибка при создании массива: {ex.Message}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Произошла ошибка: {ex.Message}");
+            }
+
+            Console.WriteLine("\nНажмите любую клавишу для выхода...");
+            Console.ReadKey();
+        }
+
+        // Метод для демонстрации работы методов класса
+        static void DemonstrateMethods(CustomArray array)
+        {
+            Console.WriteLine($"Длина массива: {array.Length}");
+            Console.WriteLine($"Сумма элементов с четными индексами: {array.CalculateSumEvenIndices():F2}");
+            Console.WriteLine($"Произведение между мин и макс: {array.CalculateProductBetweenMinMax():F2}");
+            Console.WriteLine($"Среднее арифметическое (свойство): {array.Average:F2}");
+        }
+    }
+}</code></pre>
+</p>
+<div>
+</div>
+<hr>
+<div style="text-align:left">
+    <p>
+        Projects:
+        5 published theses.<br>        
+    </p>
+    </div>
+</div>
+<div>
+    <hr>
+<img src="1.2.jpg">
+</div>
+<hr>
+
+
+
+
+
+
+<div>
+    <p style="text-align: left; color: grey;" >
+        Contacts: <em>+375-29-273-77-40</em><br>
+        <strong>Email: ttnnhhgg44@gmail.com</strong><br>        
+    </p>
+</div>
+</body>
+</html>
